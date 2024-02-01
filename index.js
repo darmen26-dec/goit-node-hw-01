@@ -44,10 +44,10 @@ async function invokeAction({ action, id, name, email, phone }) {
 
       case 'remove':
         const contactToDelete = await removeContact(id);
-        if (contactToDelete === null) {
-          console.table(`Contact with id=${id} has been removed`.green);
+        if (contactToDelete) {
+          console.log(`Contact with id=${id} has been removed`.green);
         } else {
-          console.table(`Contact with id=${id} not found`.red);
+          console.error(`Contact with id=${id} doesn't exist`.red);
         }
         break;
 

@@ -2,6 +2,8 @@ const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
+const colors = require('colors');
+
 const contactsPath = path.join(__dirname, './db/contacts.json');
 
 const listContacts = async () => {
@@ -32,22 +34,70 @@ const removeContact = async (contactId) => {
     const contactToDelete = contacts.find(
       (contact) => contact.id === contactId
     );
+    if (!contactToDelete) {
+      return null;
+    }
+
     const contactsUpdate = contacts.filter(
       (contact) => contact.id !== contactId
     );
-
     await fs.writeFile(contactsPath, JSON.stringify(contactsUpdate, null, 2));
-    if (!contactToDelete) {
-      return null;
-    } else {
-      console.log(`Contact with id ${contactId} has been removed`);
-      return contactsUpdate;
-    }
+    return contactsUpdate;
   } catch (error) {
     console.error('Error reading file contacts', error.message);
-    return null;
+    throw error;
   }
 };
+
+// 2 poprawiona wg zaleceń
+// const removeContact = async (contactId) => {
+//   try {
+//     const contacts = await listContacts();
+//     const contactToDelete = contacts.find(
+//       (contact) => contact.id === contactId
+//     );
+
+//     if (!contactToDelete) {
+//       return null;
+//     }
+
+//     const contactsUpdate = contacts.filter(
+//       (contact) => contact.id !== contactId
+//     );
+
+//     await fs.writeFile(contactsPath, JSON.stringify(contactsUpdate, null, 2));
+
+//     console.log(`Contact with id ${contactId} has been removed`);
+//     return contactsUpdate;
+//   } catch (error) {
+//     console.error('Error reading file contacts', error.message);
+//     throw error;
+//   }
+// };
+
+// 1 wersja
+// const removeContact = async (contactId) => {
+//   try {
+//     const contacts = await listContacts();
+//     const contactToDelete = contacts.find(
+//       (contact) => contact.id === contactId
+//     );
+//     const contactsUpdate = contacts.filter(
+//       (contact) => contact.id !== contactId
+//     );
+
+//     await fs.writeFile(contactsPath, JSON.stringify(contactsUpdate, null, 2));
+//     if (!contactToDelete) {
+//       return null;
+//     } else {
+//       console.log(`Contact with id ${contactId} has been removed`);
+//       return contactsUpdate;
+//     }
+//   } catch (error) {
+//     console.error('Error reading file contacts', error.message);
+//     return null;
+//   }
+// };
 
 const addContact = async (name, email, phone) => {
   try {
